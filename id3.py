@@ -1,8 +1,27 @@
+import math
 # import numpy as np
 
 class Id3:
-    def __init__(self):
-        #self.max_depth = max_depth
+    # def __init__(self):
+    #     #self.max_depth = max_depth
+
+    # return {value : count, ...}
+    def count_unique_values(self, attribute_values):
+        unique_values_counts = {}
+        for value in attribute_values:
+            if value not in unique_values_counts:
+                unique_values_counts[value] = 0
+            unique_values_counts[value] += 1
+        return unique_values_counts
+
+    # Entropy
+    def entropy(self, attribute_values):
+        unique_values_counts = self.count_unique_values(attribute_values)
+
+        sum = 0
+        for key in unique_values_counts:
+            sum += -1 * unique_values_counts[key] / len(attribute_values) * math.log2(unique_values_counts[key] / len(attribute_values)) 
+        return sum
 
     def fit(self, data_training, target_attribute, attributes):
         '''
@@ -32,10 +51,9 @@ class Id3:
         Return Root
         The best attribute is the one with highest information gain,
         '''
+        return None
         
-    def test(self, str):
-        print(str)
 
-class Tree:
+# class Tree:
     
     
