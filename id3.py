@@ -23,6 +23,21 @@ class Id3:
             sum += -1 * unique_values_counts[key] / len(attribute_values) * math.log2(unique_values_counts[key] / len(attribute_values)) 
         return sum
 
+    # Gain Information
+    def gain(self, target, attribute):
+        unique_vals_attr = self.count_unique_values(attribute)
+        sum = 0
+
+        for value in unique_vals_attr:
+            values = []
+
+            for i in range(len(target)):
+                if attribute[i] == value: values.append(target[i])
+
+            sum += unique_vals_attr[value] / len(attribute) * self.entropy(values) 
+
+        return self.entropy(target) - sum
+
     def fit(self, data_training, target_attribute, attributes):
         '''
         data_training are the training data. 
