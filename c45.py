@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 from anytree import Node, RenderTree
+import math
 
 class C45:
     def __init__(self):
@@ -14,12 +15,18 @@ class C45:
 
         return df
     
-    def handleContinuousValue(self, df, attribute) :
+    # training_data = training dataframe
+    # target_attribute = target dataframe
+    # attribute = string nama atribut yang nilainya continuous (real)
+    def handleContinuousValue(self, training_data, target_attribute, attribute) :
+        td = training_data.assign(target=target_attribute)
+        td = td.sort_values(by=attribute)
         thresholds = {}
-        for i in range(len(df[attribute])-1) :
-            threshold = (df[attribute][i] + df[attribute][i+1]) / 2
-            thresholds[threshold] = [0,0]
-        for value in df[attribute] :
+        for i in range(len(td)-1) :
+            if (td['target'][i] != td['target'][i+1]) :
+                threshold = (td[attribute][i] + td[attribute][i+1]) / 2
+                thresholds[threshold] = [0,0]
+        for value in td[attribute] :
             for threshold in thresholds.keys() :
                 if (value < threshold) :
                     thresholds[threshold][0] += 1

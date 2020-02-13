@@ -23,9 +23,12 @@ def main():
     
     #C45
     dataframe_c45 = pd.read_csv('test.csv')
-    print(c45.handleContinuousValue(dataframe_c45, 'col1'))
-    print(c45.handleContinuousValue(dataframe_c45, 'col2'))
-    print(c45.handleContinuousValue(dataframe_c45, 'col3'))
+    target_c45 = dataframe_c45['play']
+    data_training = dataframe_c45.drop('play', axis=1)
+    print(len(dataframe_c45))
+    print(c45.handleContinuousValue(data_training, target_c45, 'col1'))
+    print(c45.handleContinuousValue(data_training, target_c45, 'col2'))
+    print(c45.handleContinuousValue(data_training, target_c45, 'col3'))
     
 
 
