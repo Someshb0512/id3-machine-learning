@@ -1,5 +1,5 @@
 import math
-# import numpy as np
+import pandas as pd 
 
 class Id3:
     # def __init__(self):
@@ -27,15 +27,13 @@ class Id3:
     def gain(self, target, attribute):
         unique_vals_attr = self.count_unique_values(attribute)
         sum = 0
-
+        index = attribute.index.tolist()
         for value in unique_vals_attr:
             values = []
-
-            for i in range(len(target)):
-                if attribute[i] == value: values.append(target[i])
-
+            for i in index: 
+                if attribute[i] == value:
+                    values.append(target[i])
             sum += unique_vals_attr[value] / len(attribute) * self.entropy(values) 
-
         return self.entropy(target) - sum
 
     # Best Attribute
@@ -44,7 +42,9 @@ class Id3:
         for attribute in data_training:
             attr = data_training[attribute]
             gains[attribute] = self.gain(target, attr)
-        return max(gains, key=gains.get)
+            print('gain', attribute, gains[attribute])
+        key = max(gains, key=gains.get)
+        return key, gains[key]
 
     def fit(self, data_training, target_attribute, attributes):
         '''
@@ -76,32 +76,39 @@ class Id3:
         '''
         # node = DecisionTreeNode(examples)
    
-        # handle target attributes with arbitrary labels
         dictionary = self.count_unique_values(target_attribute)
         for key in dictionary:
             if dictionary[key] == len(data_training):
                 # node.label = key
-                return key
+                return key + " "
         
-        # test for number of examples to avoid overfitting
-        # if attributes is empty or number of examples < minimum allowed per branch:
+        # if attributes is None: #< minimum allowed per branch:
         #     node.label = most common value in examples
-        #     return node
+        #     return " "
+        # print(data_training)
+        best_attr = self.best_attribute(data_training, target_attribute)[0]
+        gain = self.best_attribute(data_training, target_attribute)[1]
+        node = best_attr + str(gain)
+        print('\nbest', best_attr, gain, '\n')
+        # print('target',target_attribute)
         
-        best_attr = self.best_attribute(data_training, target_attribute)
-        node = best_attr
         # node.decision = bestA
-        for value in data_training[best_attr]:
-            subset = data_training.loc[data_training[best_attr] == value]
+        for value in self.count_unique_values(data_training[best_attr]):
+            # print('value', value)
+            subset = data_training.loc[data_training[best_attr] == value].drop(best_attr, axis=1)
+            # print('t>', subset)
             idx = data_training.index[data_training[best_attr] == value].tolist()
+            new_target_attribute = target_attribute.loc[idx]
             if len(subset) > 0:
-                new_target_attribute = []
-                for index in idx:
-                    new_target_attribute.append(target_attribute[index])
+                # new_target_attribute = []
+                # for i in range(len(idx)):
+                    # print(i)
+                    # new_target_attribute.append(target_attribute[i])
+                # print('target', new_target_attribute)
+                new_attr = [a for a in attributes  if a != best_attr]
                 
-                node += self.fit(subset, new_target_attribute, attributes.remove(best_attr))
+                node += " " + self.fit(subset, new_target_attribute, new_attr)
+        
         return node
 
-# class Tree:
-    
     
