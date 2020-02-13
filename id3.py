@@ -1,8 +1,10 @@
 import math
 import pandas as pd 
+from anytree import Node, RenderTree
 
 class Id3:
-    # def __init__(self):
+    def __init__(self):
+        self.root = Node('DTL')
     #     #self.max_depth = max_depth
 
     # return {value : count, ...}
@@ -46,7 +48,11 @@ class Id3:
         key = max(gains, key=gains.get)
         return key, gains[key]
 
-    def fit(self, data_training, target_attribute, attributes):
+    def printtree(self):
+        for pre, fill, node in RenderTree(self.root):
+            print("%s%s" % (pre, node.name))
+
+    def fit(self, data_training, target_attribute, attributes, p=Node('DTL')):
         '''
         data_training are the training data. 
         target_attribute is the attribute whose value is to be predicted by the tree. 
@@ -75,12 +81,14 @@ class Id3:
         The best attribute is the one with highest information gain,
         '''
         # node = DecisionTreeNode(examples)
-   
+
         dictionary = self.count_unique_values(target_attribute)
         for key in dictionary:
             if dictionary[key] == len(data_training):
                 # node.label = key
-                return key + " "
+                node = Node(key, parent=p)
+                return node
+                #return key + " "
         
         # if attributes is None: #< minimum allowed per branch:
         #     node.label = most common value in examples
@@ -107,7 +115,12 @@ class Id3:
                 # print('target', new_target_attribute)
                 new_attr = [a for a in attributes  if a != best_attr]
                 
-                node += " " + self.fit(subset, new_target_attribute, new_attr)
+                par = self.fit(subset, new_target_attribute, new_attr, p)
+                print('parent: ', par)
+                print('value: ', value)
+                node = Node(best_attr + ' ' + value, parent=par)
+                self.root = p
+                #node += " " + self.fit(subset, new_target_attribute, new_attr)
         
         return node
 

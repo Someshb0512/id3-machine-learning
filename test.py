@@ -17,6 +17,7 @@ def main():
     feature = data_training.columns.to_list()
     print(feature)
     id3.fit(data_training, target, feature)
+    id3.printtree()
     
 
 if __name__ == "__main__":
