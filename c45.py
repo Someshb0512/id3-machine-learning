@@ -26,3 +26,27 @@ class C45:
                 else :
                     thresholds[threshold][1] += 1
         return thresholds
+
+    # training_data = training dataframe
+    # attribute = string nama atribut yang ingin dicari splitInfonya
+    def splitInformation(self, training_data, attribute):
+        attribute_val = training_data[attribute]
+        unique_values_counts = self.count_unique_values(attribute_val)
+
+        for key in unique_values_counts:
+            proportion = unique_values_counts[key] / len(attribute_val) 
+            sum += -1 * proportion * math.log2(proportion) 
+        return sum
+
+    # training_data = training dataframe
+    # target = target dataframe
+    # selected attribute = string attribute name
+    def gainRatio(self, training_data, target, selected_attribute):
+        splitInfo = self.splitInformation(training_data, selected_attribute)
+        attr_gain = self.gain(target, training_data[selected_attribute])
+    
+        return (attr_gain/splitInfo)
+
+    
+
+
