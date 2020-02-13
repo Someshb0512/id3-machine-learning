@@ -23,7 +23,10 @@ def main():
     
     #C45
     dataframe_c45 = pd.read_csv('test.csv')
-    c45.handleContinuousValue(dataframe_c45, 'col1')
+    print(c45.handleContinuousValue(dataframe_c45, 'col1'))
+    print(c45.handleContinuousValue(dataframe_c45, 'col2'))
+    print(c45.handleContinuousValue(dataframe_c45, 'col3'))
+    
 
 
 if __name__ == "__main__":

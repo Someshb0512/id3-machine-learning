@@ -15,8 +15,14 @@ class C45:
         return df
     
     def handleContinuousValue(self, df, attribute) :
-        thresholds = []
+        thresholds = {}
         for i in range(len(df[attribute])-1) :
             threshold = (df[attribute][i] + df[attribute][i+1]) / 2
-            thresholds.append(threshold)
+            thresholds[threshold] = [0,0]
+        for value in df[attribute] :
+            for threshold in thresholds.keys() :
+                if (value < threshold) :
+                    thresholds[threshold][0] += 1
+                else :
+                    thresholds[threshold][1] += 1
         return thresholds
