@@ -10,3 +10,5 @@ class c45:
         for col in columns:
             mode = df[col].mode()[0]
             df[col].fillna(mode, inplace=True)
+
+        return df
