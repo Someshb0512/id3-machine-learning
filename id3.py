@@ -38,6 +38,14 @@ class Id3:
 
         return self.entropy(target) - sum
 
+    # Best Attribute
+    def best_attribute(self, data_training, target):
+        gains = {}
+        for attribute in data_training:
+            attr = data_training[attribute]
+            gains[attribute] = self.gain(target, attr)
+        return max(gains, key=gains.get)
+
     def fit(self, data_training, target_attribute, attributes):
         '''
         data_training are the training data. 
@@ -66,8 +74,33 @@ class Id3:
         Return Root
         The best attribute is the one with highest information gain,
         '''
-        return None
+        # node = DecisionTreeNode(examples)
+   
+        # handle target attributes with arbitrary labels
+        dictionary = self.count_unique_values(target_attribute)
+        for key in dictionary:
+            if dictionary[key] == len(data_training):
+                # node.label = key
+                return key
         
+        # test for number of examples to avoid overfitting
+        # if attributes is empty or number of examples < minimum allowed per branch:
+        #     node.label = most common value in examples
+        #     return node
+        
+        best_attr = self.best_attribute(data_training, target_attribute)
+        node = best_attr
+        # node.decision = bestA
+        for value in data_training[best_attr]:
+            subset = data_training.loc[data_training[best_attr] == value]
+            idx = data_training.index[data_training[best_attr] == value].tolist()
+            if len(subset) > 0:
+                new_target_attribute = []
+                for index in idx:
+                    new_target_attribute.append(target_attribute[index])
+                
+                node += self.fit(subset, new_target_attribute, attributes.remove(best_attr))
+        return node
 
 # class Tree:
     
