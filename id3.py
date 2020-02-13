@@ -96,7 +96,7 @@ class Id3:
         # print(data_training)
         best_attr = self.best_attribute(data_training, target_attribute)[0]
         gain = self.best_attribute(data_training, target_attribute)[1]
-        node = best_attr + str(gain)
+        node = Node(best_attr + " " + str(gain), parent=p)
         print('\nbest', best_attr, gain, '\n')
         # print('target',target_attribute)
         
@@ -114,14 +114,14 @@ class Id3:
                     # new_target_attribute.append(target_attribute[i])
                 # print('target', new_target_attribute)
                 new_attr = [a for a in attributes  if a != best_attr]
-                
-                par = self.fit(subset, new_target_attribute, new_attr, p)
+                node2 = Node(best_attr + ' ' + value, parent=node)
+                par = self.fit(subset, new_target_attribute, new_attr, node2)
                 print('parent: ', par)
                 print('value: ', value)
-                node = Node(best_attr + ' ' + value, parent=par)
-                self.root = p
+                #node = Node(best_attr + ' ' + value, parent=node)
                 #node += " " + self.fit(subset, new_target_attribute, new_attr)
         
+        self.root = p
         return node
 
     
