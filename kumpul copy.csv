@@ -1,0 +1,11 @@
+Deadline,Ada Hangout,Malas,Aktivitas
+Urgent,1,1,Kumpul-kumpul
+Urgent,0,1,Belajar
+Dekat,1,1,Kumpul-kumpul
+TIdak ada,1,0,Kumpul-kumpul
+Tidak ada,0,1,Jalan-jalan
+Tidak ada,1,0,Kumpul-kumpul
+Dekat,0,0,Belajar
+Dekat,0,1,Nonton TV
+Dekat,1,1,Kumpul-kumpul
+Urgent,0,0,Belajar

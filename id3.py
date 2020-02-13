@@ -97,7 +97,7 @@ class Id3:
             
             if len(subset) > 0:
                 new_attr = [a for a in attributes  if a != best_attr]
-                node2 = Node(best_attr + ' -> ' + value, parent=node)
+                node2 = Node(best_attr + ' -> ' + str(value), parent=node)
                 par = self.fit(subset, new_target_attribute, new_attr, node2)
         
         self.root = p
