@@ -44,10 +44,10 @@ class Id3:
         for attribute in data_training:
             attr = data_training[attribute]
             gains[attribute] = self.gain(target, attr)
-            print('gain', attribute, gains[attribute])
         key = max(gains, key=gains.get)
         return key, gains[key]
 
+    # Print Tree
     def printtree(self):
         for pre, fill, node in RenderTree(self.root):
             print("%s%s" % (pre, node.name))
@@ -80,46 +80,24 @@ class Id3:
         Return Root
         The best attribute is the one with highest information gain,
         '''
-        # node = DecisionTreeNode(examples)
-
         dictionary = self.count_unique_values(target_attribute)
         for key in dictionary:
             if dictionary[key] == len(data_training):
-                # node.label = key
                 node = Node(key, parent=p)
                 return node
-                #return key + " "
         
-        # if attributes is None: #< minimum allowed per branch:
-        #     node.label = most common value in examples
-        #     return " "
-        # print(data_training)
         best_attr = self.best_attribute(data_training, target_attribute)[0]
         gain = self.best_attribute(data_training, target_attribute)[1]
         node = Node(best_attr + " " + str(gain), parent=p)
-        print('\nbest', best_attr, gain, '\n')
-        # print('target',target_attribute)
         
-        # node.decision = bestA
         for value in self.count_unique_values(data_training[best_attr]):
-            # print('value', value)
             subset = data_training.loc[data_training[best_attr] == value].drop(best_attr, axis=1)
-            # print('t>', subset)
             idx = data_training.index[data_training[best_attr] == value].tolist()
             new_target_attribute = target_attribute.loc[idx]
             if len(subset) > 0:
-                # new_target_attribute = []
-                # for i in range(len(idx)):
-                    # print(i)
-                    # new_target_attribute.append(target_attribute[i])
-                # print('target', new_target_attribute)
                 new_attr = [a for a in attributes  if a != best_attr]
                 node2 = Node(best_attr + ' ' + value, parent=node)
                 par = self.fit(subset, new_target_attribute, new_attr, node2)
-                print('parent: ', par)
-                print('value: ', value)
-                #node = Node(best_attr + ' ' + value, parent=node)
-                #node += " " + self.fit(subset, new_target_attribute, new_attr)
         
         self.root = p
         return node
