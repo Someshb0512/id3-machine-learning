@@ -5,9 +5,8 @@ from anytree import Node, RenderTree
 class Id3:
     def __init__(self):
         self.root = Node('DTL')
-    #     #self.max_depth = max_depth
-
-    # return {value : count, ...}
+    
+    # return dictionary of attribute value {value : count, ...}
     def count_unique_values(self, attribute_values):
         unique_values_counts = {}
         for value in attribute_values:
@@ -19,10 +18,10 @@ class Id3:
     # Entropy
     def entropy(self, attribute_values):
         unique_values_counts = self.count_unique_values(attribute_values)
-
         sum = 0
         for key in unique_values_counts:
-            sum += -1 * unique_values_counts[key] / len(attribute_values) * math.log2(unique_values_counts[key] / len(attribute_values)) 
+            proportion = unique_values_counts[key] / len(attribute_values) 
+            sum += -1 * proportion * math.log2(proportion) 
         return sum
 
     # Gain Information
@@ -48,11 +47,11 @@ class Id3:
         return key, gains[key]
 
     # Print Tree
-    def printtree(self):
+    def print_tree(self):
         for pre, fill, node in RenderTree(self.root):
             print("%s%s" % (pre, node.name))
 
-    def fit(self, data_training, target_attribute, attributes, p=Node('DTL')):
+    def fit(self, data_training, target_attribute, attributes, p=Node('DT')):
         '''
         data_training are the training data. 
         target_attribute is the attribute whose value is to be predicted by the tree. 
@@ -75,11 +74,12 @@ class Id3:
                 If data_training,, is empty 
                     Then below this new branch add a leaf node with label = most common value of Target attribute in data_training
                 Else below this new branch add the subtree
-        fit(data_training,,, Targetattribute, Attributes - ( A ) ) )
+                    fit(data_training,,, Targetattribute, Attributes - ( A ) ) )
         End
         Return Root
         The best attribute is the one with highest information gain,
         '''
+        
         dictionary = self.count_unique_values(target_attribute)
         for key in dictionary:
             if dictionary[key] == len(data_training):
@@ -94,9 +94,10 @@ class Id3:
             subset = data_training.loc[data_training[best_attr] == value].drop(best_attr, axis=1)
             idx = data_training.index[data_training[best_attr] == value].tolist()
             new_target_attribute = target_attribute.loc[idx]
+            
             if len(subset) > 0:
                 new_attr = [a for a in attributes  if a != best_attr]
-                node2 = Node(best_attr + ' ' + value, parent=node)
+                node2 = Node(best_attr + ' -> ' + value, parent=node)
                 par = self.fit(subset, new_target_attribute, new_attr, node2)
         
         self.root = p
