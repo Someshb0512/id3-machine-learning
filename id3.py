@@ -1,6 +1,7 @@
 import math
-import pandas as pd 
-from anytree import Node, RenderTree
+import pandas as pd
+import numpy as pd
+from anytree import *
 
 class Id3:
     def __init__(self):
@@ -103,4 +104,18 @@ class Id3:
         self.root = p
         return node
 
-    
+    def predict(self, data_test) :
+        predicted_labels = []
+        for index, row in data_test.iterrows():
+            predicted_labels.append(self.predict_recursive(self.root.children[0], row))
+        return predicted_labels
+
+    def predict_recursive(self, current_node, record) :
+        if current_node.is_leaf :
+            return current_node.name
+        elif not current_node.is_leaf :
+            if len(current_node.name.split()) == 2 :
+                attribute = current_node.name.split()[0]
+                for node in current_node.children :
+                    if record[attribute] == node.name.split()[2] :
+                        return self.predict_recursive(node.children[0], record)
